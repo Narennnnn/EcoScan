@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { View } from '@/components/Themed';
-import ScanScreenInfo from '@/components/ScanScreenInfo';
-
-export default function ScanScreen() {
+import RewardScreenInfo from '@/components/RewardScreenInfo';
+export default function RewardScreen() {
   return (
     <View style={styles.container}>
-      <ScanScreenInfo />
+        <RewardScreenInfo />
     </View>
   );
 }
@@ -15,3 +14,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 }); 
+
+

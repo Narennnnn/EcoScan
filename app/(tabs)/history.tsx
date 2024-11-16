@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { View } from '@/components/Themed';
-import ScanScreenInfo from '@/components/ScanScreenInfo';
-
-export default function ScanScreen() {
+import HistoryScreenInfo from '@/components/HistoryScreenInfo';
+export default function HistoryScreen() {
   return (
     <View style={styles.container}>
-      <ScanScreenInfo />
+      <HistoryScreenInfo />
     </View>
   );
 }
@@ -15,3 +14,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 }); 
+
+
