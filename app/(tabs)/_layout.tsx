@@ -1,52 +1,64 @@
-import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Link, Tabs } from 'expo-router';
+import { Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
 
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof Ionicons>['name'];
+  name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
-  size: number;
+  focused?: boolean;
 }) {
-  return <Ionicons style={{ marginBottom: -3 }} {...props} />;
+  return (
+    <FontAwesome 
+      size={24} 
+      style={{ 
+        marginBottom: -3,
+        transform: [{ scale: props.focused ? 1.1 : 1 }]
+      }} 
+      {...props} 
+    />
+  );
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#ffd33d',
+        tabBarActiveTintColor: Colors.light.primary,
+        tabBarInactiveTintColor: Colors.light.tabIconDefault,
         headerShown: false,
         tabBarStyle: {
-          paddingBottom: 5,
-        },
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 5,
+        }
       }}>
       <Tabs.Screen
         name="index"
         options={{
+          title: 'Home',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="home" color={color} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="scan"
+        options={{
           title: 'Scan',
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon 
-              name={focused ? 'home' : 'home-outline'} 
-              color={color}
-              size={24}
-            />
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="camera" color={color} focused={focused} />
           ),
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
-          title: 'Track',
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon 
-              name={focused ? 'bar-chart' : 'bar-chart-outline'}
-              color={color}
-              size={24}
-            />
+          title: 'History',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="history" color={color} focused={focused} />
           ),
         }}
       />
@@ -54,12 +66,8 @@ export default function TabLayout() {
         name="rewards"
         options={{
           title: 'Rewards',
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon 
-              name={focused ? 'gift' : 'gift-outline'} 
-              color={color}
-              size={24}
-            />
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="gift" color={color} focused={focused} />
           ),
         }}
       />
