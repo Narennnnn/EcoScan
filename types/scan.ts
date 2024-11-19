@@ -16,4 +16,13 @@ export interface Offer {
   description: string;
   pointsRequired: number;
   discount: string;
+}
+
+export interface ImageRecognitionResponse {
+  success: boolean;
+  data?: {
+    items: string[];
+    confidence: number;
+  };
+  error?: string;
 } 

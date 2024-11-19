@@ -1,26 +1,12 @@
-import { ScanResult, Offer, ClothingItem } from '../types/scan';
 import * as ImagePicker from 'expo-image-picker';
+import { ImageRecognitionResponse } from '../types/scan';
 
-export const pickImage = async (): Promise<string | null> => {
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
-  });
+const API_URL = 'http://localhost:3000/api';
 
-  if (!result.canceled) {
-    return result.assets[0].uri;
-  }
-
-  return null;
-};
-
-export const takePhoto = async (): Promise<string | null> => {
-  const permission = await ImagePicker.requestCameraPermissionsAsync();
-  
-  if (permission.granted) {
-    const result = await ImagePicker.launchCameraAsync({
+export const scanService = {
+  async pickImage(): Promise<string | null> {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -29,54 +15,56 @@ export const takePhoto = async (): Promise<string | null> => {
     if (!result.canceled) {
       return result.assets[0].uri;
     }
-  }
+    return null;
+  },
 
-  return null;
-};
-
-export const analyzeCarbonFootprint = async (imageUri: string): Promise<ScanResult> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        items: [
-          {
-            type: 'T-Shirt',
-            carbonFootprint: 5,
-            confidence: 0.95,
-          },
-          {
-            type: 'Jeans',
-            carbonFootprint: 10,
-            confidence: 0.88,
-          },
-        ],
-        totalCarbonFootprint: 15,
-        ecoRewardPoints: 30,
+  async takePhoto(): Promise<string | null> {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    
+    if (permission.granted) {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
       });
-    }, 1500);
-  });
-};
 
-export const getAvailableOffers = async (points: number): Promise<Offer[]> => {
-  // This would be replaced with actual API call
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: '1',
-          title: '10% Off Eco-Friendly Brands',
-          description: 'Get 10% off on selected eco-friendly clothing brands',
-          pointsRequired: 100,
-          discount: '10%',
+      if (!result.canceled) {
+        return result.assets[0].uri;
+      }
+    }
+    return null;
+  },
+
+  async recognizeImage(imageUri: string): Promise<ImageRecognitionResponse> {
+    try {
+      const formData = new FormData();
+      
+      // Get filename from uri
+      const filename = imageUri.split('/').pop() || 'image.jpg';
+      
+      // Append the image to form data
+      formData.append('image', {
+        uri: imageUri,
+        name: filename,
+        type: 'image/jpeg',
+      } as any);
+
+      const response = await fetch(`${API_URL}/recognize-image`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
-        {
-          id: '2',
-          title: 'Free Recycling Kit',
-          description: 'Receive a free clothing recycling kit',
-          pointsRequired: 50,
-          discount: 'FREE',
-        },
-      ]);
-    }, 1000);
-  });
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return {
+        success: false,
+        error: 'Failed to analyze image. Please try again.',
+      };
+    }
+  },
 }; 
