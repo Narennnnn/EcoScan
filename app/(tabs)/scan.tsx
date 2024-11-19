@@ -182,7 +182,7 @@ export default function ScanScreen() {
     const ages = [
       { label: '0-6 months', value: '0-6m' },
       { label: '6-12 months', value: '6-12m' },
-      { label: 'More than 1 year', value: '1y+' },
+      { label: '12-24 months', value: '12-24m' },
     ];
 
     return (
