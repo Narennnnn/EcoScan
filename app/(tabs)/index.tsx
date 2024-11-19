@@ -1,142 +1,146 @@
-import { StyleSheet, ScrollView, View, Dimensions } from 'react-native';
+import React from 'react';
+import { 
+  StyleSheet, 
+  ScrollView, 
+  View, 
+  TouchableOpacity,
+  Dimensions,
+  Animated 
+} from 'react-native';
 import { Text } from '@/components/Themed';
 import Colors from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { useApp } from '@/context/AppContext';
 
 const { width } = Dimensions.get('window');
 
-type IconName = 'leaf' | 'tint' | 'star' | 'recycle' | 'sun-o' | 'tree';
-
-interface ImpactMetric {
-  icon: IconName;
-  number: string;
-  label: string;
-  color?: string;
-}
-
-interface EcoTip {
-  icon: IconName;
+interface Tip {
+  icon: keyof typeof FontAwesome.glyphMap;
   title: string;
   text: string;
 }
 
 export default function HomeScreen() {
-  const impactMetrics: ImpactMetric[] = [
-    {
-      icon: 'leaf',
-      number: '0 kg',
-      label: 'CO₂ Saved',
-      color: Colors.light.primary,
-    },
-    {
-      icon: 'tint',
-      number: '0 L',
-      label: 'Water Saved',
-      color: '#4DABF7',
-    },
-    {
-      icon: 'recycle',
-      number: '0',
-      label: 'Items Recycled',
-      color: '#40C057',
-    },
-    {
-      icon: 'star',
-      number: '0',
-      label: 'Points Earned',
-      color: '#FAB005',
-    },
-  ];
+  const { state } = useApp();
 
-  const ecoTips: EcoTip[] = [
-    {
-      icon: 'leaf',
-      title: 'Choose Sustainable',
-      text: 'Opt for organic cotton and recycled materials to minimize environmental impact.',
-    },
-    {
-      icon: 'recycle',
-      title: 'Circular Fashion',
-      text: 'Extend your clothes life through proper care and recycling practices.',
-    },
-    {
-      icon: 'tint',
-      title: 'Save Water',
-      text: 'Support brands using water-efficient production methods.',
-    },
-    {
-      icon: 'sun-o',
-      title: 'Energy Efficient',
-      text: 'Wash clothes in cold water xand air dry when possible.',
-    },
-    {
-      icon: 'tree',
-      title: 'Go Natural',
-      text: 'Choose natural fibers that biodegrade at the end of their lifecycle.',
-    },
-  ];
+  const getEnvironmentalImpact = () => {
+    const carbonScore = Number(state.carbonScore).toFixed(2);
+    const trees = (state.carbonScore * 0.1).toFixed(1);
+    const water = Math.round(state.carbonScore * 0.5);
+    return { carbonScore, trees, water };
+  };
+
+  const { carbonScore, trees, water } = getEnvironmentalImpact();
+
+  const ImpactCard = ({ 
+    icon, 
+    value, 
+    label 
+  }: { 
+    icon: keyof typeof FontAwesome.glyphMap; 
+    value: string | number; 
+    label: string;
+  }) => (
+    <View style={styles.impactCard}>
+      <FontAwesome name={icon} size={24} color={Colors.light.primary} />
+      <Text style={styles.impactValue}>{value}</Text>
+      <Text style={styles.impactLabel}>{label}</Text>
+    </View>
+  );
+
+  const getTip = (): Tip => {
+    if (state.totalPoints === 0) {
+      return {
+        icon: 'lightbulb-o' as keyof typeof FontAwesome.glyphMap,
+        title: 'Start Your Eco Journey',
+        text: 'Scan your first clothing item to begin tracking your environmental impact!'
+      };
+    }
+    
+    if (state.carbonScore > 10) {
+      return {
+        icon: 'leaf' as keyof typeof FontAwesome.glyphMap,
+        title: 'Making a Difference!',
+        text: `You've saved ${carbonScore}kg of CO₂! That's equivalent to planting ${trees} trees.`
+      };
+    }
+
+    return {
+      icon: 'recycle' as keyof typeof FontAwesome.glyphMap,
+      title: 'Keep Going!',
+      text: 'Every scan helps build a more sustainable future.'
+    };
+  };
+
+  const currentTip = getTip();
 
   return (
-    <ScrollView 
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>EcoScan</Text>
-        <Text style={styles.subtitle}>Track Your Fashion Footprint</Text>
+        <Text style={styles.subtitle}>Your Sustainable Fashion Companion</Text>
       </View>
 
-      <View style={styles.impactSection}>
+      <View style={styles.summaryContainer}>
         <Text style={styles.sectionTitle}>Your Impact</Text>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.impactContainer}
-          snapToInterval={width * 0.4 + 12}
-          decelerationRate="fast"
-        >
-          {impactMetrics.map((metric, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.impactCard,
-                { width: width * 0.3
-                  
-                 }
-              ]}
-            >
-              <FontAwesome 
-                name={metric.icon} 
-                size={24} 
-                color={metric.color || Colors.light.primary} 
-              />
-              <Text style={styles.impactNumber}>{metric.number}</Text>
-              <Text style={styles.impactLabel}>{metric.label}</Text>
-            </View>
-          ))}
-        </ScrollView>
+        <View style={styles.impactGrid}>
+          <ImpactCard 
+            icon="leaf" 
+            value={`${carbonScore}kg`}
+            label="CO₂ Saved" 
+          />
+          <ImpactCard 
+            icon="star" 
+            value={state.totalPoints || 0}
+            label="Points Earned" 
+          />
+          <ImpactCard 
+            icon="tint" 
+            value={`${water}L`}
+            label="Water Saved" 
+          />
+          <ImpactCard 
+            icon="tree" 
+            value={trees}
+            label="Trees Equivalent" 
+          />
+        </View>
       </View>
 
-      <View style={styles.tipsSection}>
-        <Text style={styles.sectionTitle}>Eco Tips</Text>
-        {ecoTips.map((tip, index) => (
-          <View 
-            key={index} 
-            style={[
-              styles.tipCard,
-              { opacity: 1 - (index * 0.1) }  // Subtle fade effect for cards
-            ]}
-          >
-            <View style={[styles.tipIcon, { borderColor: Colors.light.primary }]}>
-              <FontAwesome name={tip.icon} size={24} color={Colors.light.primary} />
-            </View>
-            <View style={styles.tipContent}>
-              <Text style={styles.tipTitle}>{tip.title}</Text>
-              <Text style={styles.tipText}>{tip.text}</Text>
-            </View>
+      {state.totalPoints > 0 && (
+        <View style={styles.achievementContainer}>
+          <Text style={styles.sectionTitle}>Achievements</Text>
+          <View style={styles.achievementCard}>
+            <FontAwesome 
+              name={state.totalPoints >= 100 ? "trophy" : "star-o"} 
+              size={32} 
+              color={state.totalPoints >= 100 ? Colors.light.primary : Colors.light.tabIconDefault} 
+            />
+            <Text style={styles.achievementTitle}>
+              {state.totalPoints >= 100 ? "Eco Warrior!" : "Next Milestone"}
+            </Text>
+            <Text style={styles.achievementText}>
+              {state.totalPoints >= 100 
+                ? "You've earned over 100 points!"
+                : `${100 - state.totalPoints} points to reach Eco Warrior status`}
+            </Text>
           </View>
-        ))}
+        </View>
+      )}
+
+      <View style={styles.tipContainer}>
+        <Text style={styles.sectionTitle}>Eco Tip</Text>
+        <View style={styles.tipCard}>
+          <FontAwesome 
+            name={currentTip.icon} 
+            size={24} 
+            color={Colors.light.primary} 
+          />
+          <View style={styles.tipContent}>
+            <Text style={styles.tipTitle}>{currentTip.title}</Text>
+            <Text style={styles.tipText}>{currentTip.text}</Text>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -167,21 +171,23 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginTop: 4,
   },
-  impactSection: {
-    paddingTop: 24,
-    paddingHorizontal: 20,
+  summaryContainer: {
+    padding: 20,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
-    color: Colors.light.text,
     marginBottom: 16,
+    color: Colors.light.text,
   },
-  impactContainer: {
-    paddingRight: 20,
+  impactGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
+    justifyContent: 'space-between',
   },
   impactCard: {
+    width: (width - 52) / 2,
     backgroundColor: Colors.light.background,
     borderRadius: 16,
     padding: 16,
@@ -192,41 +198,57 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
   },
-  impactNumber: {
+  impactValue: {
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.light.text,
-    marginTop: 12,
+    marginTop: 8,
   },
   impactLabel: {
     fontSize: 14,
     color: Colors.light.tabIconDefault,
     marginTop: 4,
+  },
+  achievementContainer: {
+    padding: 20,
+  },
+  achievementCard: {
+    backgroundColor: Colors.light.background,
+    borderRadius: 16,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  achievementTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: Colors.light.text,
+    marginTop: 12,
+  },
+  achievementText: {
+    fontSize: 14,
+    color: Colors.light.tabIconDefault,
+    marginTop: 4,
     textAlign: 'center',
   },
-  tipsSection: {
+  tipContainer: {
     padding: 20,
+    paddingBottom: 32,
   },
   tipCard: {
     flexDirection: 'row',
     backgroundColor: Colors.light.background,
     borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
-  },
-  tipIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.light.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
   },
   tipContent: {
     flex: 1,

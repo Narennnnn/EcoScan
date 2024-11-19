@@ -20,7 +20,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.narendrrrr.ecoscanapp"
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +43,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "101008fd-c3b3-4a42-b7ac-0f424c17a443"
+      }
+    },
+    "owner": "narendrrrr"
   }
 }

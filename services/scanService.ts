@@ -1,5 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
-import { ImageRecognitionResponse } from '../types/scan';
+import { ImageRecognitionResponse, CarbonScoreRequest, CarbonScoreResponse } from '../types/scan';
+import { storageService } from './storageService';
 
 const API_URL = 'http://localhost:3000/api';
 
@@ -64,6 +65,35 @@ export const scanService = {
       return {
         success: false,
         error: 'Failed to analyze image. Please try again.',
+      };
+    }
+  },
+
+  async calculateCarbonScore(data: CarbonScoreRequest): Promise<CarbonScoreResponse> {
+    try {
+      const response = await fetch(`${API_URL}/calculate-carbon-score`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      
+      if (result.success && result.data?.ecoPoints) {
+        await storageService.addPoints(result.data.ecoPoints);
+        await storageService.saveScanResult({
+          ...result.data,
+          itemName: data.name,
+        });
+      }
+
+      return result;
+    } catch (error) {
+      return {
+        success: false,
+        error: 'Failed to calculate carbon score. Please try again.',
       };
     }
   },
