@@ -1,8 +1,16 @@
 import * as ImagePicker from 'expo-image-picker';
+import { Platform } from 'react-native';
 import { ImageRecognitionResponse, CarbonScoreRequest, CarbonScoreResponse } from '../types/scan';
 import { storageService } from './storageService';
 
-const API_URL = 'http://localhost:3000/api';
+const getApiUrl = () => {
+  if (Platform.OS === 'android') {
+    // Use your Mac's actual IP address(if using a android phone for testing application using expo go so that it can connect to the server)
+    return 'http://192.168.1.2:3000/api';
+  }
+  // when running ios or android simulator 
+  return 'http://localhost:3000/api';
+};
 
 export const scanService = {
   async pickImage(): Promise<string | null> {
@@ -40,15 +48,16 @@ export const scanService = {
     try {
       const formData = new FormData();
       
-      // Get filename from uri
       const filename = imageUri.split('/').pop() || 'image.jpg';
       
-      // Append the image to form data
       formData.append('image', {
         uri: imageUri,
         name: filename,
         type: 'image/jpeg',
       } as any);
+
+      const API_URL = getApiUrl();
+      console.log('Sending request to:', API_URL);
 
       const response = await fetch(`${API_URL}/recognize-image`, {
         method: 'POST',
@@ -59,18 +68,42 @@ export const scanService = {
         },
       });
 
+      if (response.status === 500) {
+        const errorData = await response.json();
+        if (errorData.error && errorData.error.includes('No clothing items detected')) {
+          return {
+            success: false,
+            error: 'No clothing items or accessories identified. Please try again with a clearer picture of the item.',
+          };
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       return data;
     } catch (error) {
+      console.error('Image recognition error:', error);
+      
+      if (error instanceof TypeError && error.message === 'Network request failed') {
+        return {
+          success: false,
+          error: 'Unable to connect to the server. Please check your internet connection.',
+        };
+      }
+
       return {
         success: false,
-        error: 'Failed to analyze image. Please try again.',
+        error: 'Something went wrong while analyzing the image. Please try again.',
       };
     }
   },
 
   async calculateCarbonScore(data: CarbonScoreRequest): Promise<CarbonScoreResponse> {
     try {
+      const API_URL = getApiUrl();
       const response = await fetch(`${API_URL}/calculate-carbon-score`, {
         method: 'POST',
         headers: {
@@ -91,6 +124,7 @@ export const scanService = {
 
       return result;
     } catch (error) {
+      console.error('Carbon score calculation error:', error); // Debug log
       return {
         success: false,
         error: 'Failed to calculate carbon score. Please try again.',
