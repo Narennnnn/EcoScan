@@ -5,8 +5,7 @@ import { storageService } from './storageService';
 
 const getApiUrl = () => {
   if (Platform.OS === 'android') {
-    // Use your Mac's actual IP address(if using a android phone for testing application using expo go so that it can connect to the server)
-    return 'http://192.168.1.2:3000/api';
+    return 'http://192.168.0.255:3000/api';
   }
   // when running ios or android simulator 
   return 'http://localhost:3000/api';

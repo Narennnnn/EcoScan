@@ -15,11 +15,12 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.narendrrrr.ecoscanapp"
+      "bundleIdentifier": "com.narendrrrr.ecoscanapp",
+      "icon": "./assets/images/ecoscanapp.png"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/ecoscanapp.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
