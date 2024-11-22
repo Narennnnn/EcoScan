@@ -43,7 +43,7 @@ EcoScan is a mobile app designed to help users understand the environmental impa
    cd eco-scan-challenge-backend
    npm install
    ```
-
+   
 3. **Configure IP Address for Mobile Testing**
    ```bash
    # Find your PC's IP address
@@ -57,7 +57,7 @@ EcoScan is a mobile app designed to help users understand the environmental impa
    Then update `services/scanService.ts`:
    ```typescript
    const getApiUrl = () => {
-     if (Platform.OS === 'android') {
+     if (Platform.OS === 'android' || Platform.OS === 'ios') {
        // Replace with your PC's IP address
        return 'http://YOUR_PC_IP:3000/api';  // Example: http://192.168.1.2:3000/api
      }
@@ -69,7 +69,8 @@ EcoScan is a mobile app designed to help users understand the environmental impa
    - Your PC and phone must be on the same WiFi network
    - Use your PC's actual IP address (not localhost) for testing on physical devices
    - localhost will work for iOS simulator as it runs on your Mac
-   - For Android devices, you must use your PC's IP address
+   - For Android/ios devices, you must use your PC's IP address
+
 
 4. **Run the Applications**
    - **Backend**: 
