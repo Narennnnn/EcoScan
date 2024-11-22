@@ -15,7 +15,7 @@ EcoScan is a mobile app designed to help users understand the environmental impa
 ### Backend
 - Node.js
 - Express.js
-- Azure Vision API (Image recognition)
+- Azure AI Services API (Image recognition)
 - Mocha (Testing)
 
 ---
@@ -92,10 +92,6 @@ The app calculates environmental impact based on:
 - Material analysis
 - Size and complexity factors
 
-Points are awarded for:
-- Choosing sustainable materials
-- Reusing clothing items
-- Engaging with eco-friendly brands
 
 ---
 
