@@ -136,6 +136,10 @@ Points are awarded for:
    - Push notifications
    - Advanced analytics
 
+4. **Deployment**
+   - Publish the app to App Store and Google Play
+   - Deploy backend server on Azure App Service
+
 ---
 
 ##  Links
