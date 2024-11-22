@@ -7,7 +7,8 @@ const getApiUrl = () => {
   if (Platform.OS === 'android') {
     return 'http://192.168.0.255:3000/api';
   }
-  // when running ios or android simulator 
+  // Similarly add for 'ios' when locally testing on ios phone using expo go
+  // and add the ip address of the pc running the server
   return 'http://localhost:3000/api';
 };
 

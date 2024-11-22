@@ -19,7 +19,7 @@ import {
 } from '@/types/scan';
 import { useApp } from '@/context/AppContext';
 
-const RESET_DELAY = 15000; // 15 seconds delay before reset
+const RESET_DELAY = 20000; // 20 seconds delay before reset
 const { width } = Dimensions.get('window');
 
 export default function ScanScreen() {

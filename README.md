@@ -44,10 +44,37 @@ EcoScan is a mobile app designed to help users understand the environmental impa
    npm install
    ```
 
-3. **Run the Applications**
+3. **Configure IP Address for Mobile Testing**
+   ```bash
+   # Find your PC's IP address
+   # On Mac/Linux:
+   ifconfig | grep "inet " | grep -v 127.0.0.1
+   
+   # On Windows:
+   ipconfig
+   ```
+
+   Then update `services/scanService.ts`:
+   ```typescript
+   const getApiUrl = () => {
+     if (Platform.OS === 'android') {
+       // Replace with your PC's IP address
+       return 'http://YOUR_PC_IP:3000/api';  // Example: http://192.168.1.2:3000/api
+     }
+     return 'http://localhost:3000/api';
+   };
+   ```
+
+   Important Notes:
+   - Your PC and phone must be on the same WiFi network
+   - Use your PC's actual IP address (not localhost) for testing on physical devices
+   - localhost will work for iOS simulator as it runs on your Mac
+   - For Android devices, you must use your PC's IP address
+
+4. **Run the Applications**
    - **Backend**: 
      ```bash
-     npm run dev   # Runs on http://localhost:3000
+     npm start   # Runs on http://localhost:3000
      ```
    - **Frontend**: 
      ```bash
@@ -125,7 +152,7 @@ The app calculates environmental impact based on:
 2. **User Experience**
    - UI/UX could be improved
    - Social sharing features
-   - Detailed sustainability tips
+   - Detailed sustainability tipsal
 
 3. **Technical**
    - Offline support
