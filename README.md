@@ -1,7 +1,6 @@
-# 🌍 EcoScan - Clothing Carbon Footprint Scanner
-Demo Video: https://www.loom.com/share/e9de3364aab244258ff6bcb3c2bb7219?sid=0abd3e56-46b9-4f2e-a6c7-6abf2b48dc06
+# EcoScan - Clothing Carbon Footprint Scanner
 
-## 📜 Overview
+## Overview
 EcoScan is a mobile app designed to help users understand the environmental impact of their clothing. By uploading images of clothing items, users can see estimated carbon scores, earn eco-reward points, and redeem sustainability-focused offers. The app uses Azure Vision API to analyze clothing items and calculate their environmental impact.
 
 ## 🔧 Tech Stack
@@ -21,7 +20,7 @@ EcoScan is a mobile app designed to help users understand the environmental impa
 
 ---
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 1. **Clone the Repositories**  
    ```bash
@@ -66,7 +65,7 @@ EcoScan is a mobile app designed to help users understand the environmental impa
 
 ---
 
-## 📱 Features
+##  Features
 
 ### Image Recognition
 - Take photos or select from gallery
@@ -86,7 +85,7 @@ EcoScan is a mobile app designed to help users understand the environmental impa
 
 ---
 
-## 🌱 Carbon Score System
+##  Carbon Score System
 
 The app calculates environmental impact based on:
 - Clothing type identification
@@ -100,7 +99,7 @@ Points are awarded for:
 
 ---
 
-## 🔄 Data Flow
+##  Data Flow
 1. User captures/selects image
 2. Image sent to backend server
 3. Azure Vision API analyzes image
@@ -111,7 +110,7 @@ Points are awarded for:
 
 ---
 
-## 📲 Testing
+## Testing
 
 - Run on iOS Simulator
 - Test on Android devices
@@ -120,16 +119,16 @@ Points are awarded for:
 
 ---
 
-### 🌟 Future Enhancements
+###  Future Enhancements
 
-1. **AI Improvements**
-   - Enhanced material detection
-   - More accurate carbon scoring
-   - Brand recognition
+1. **Map Integration**
+   - Integration with map to show nearby sustainable brands
+   - Integration with map to show nearby recycling centers
+   - Integration with map to show nearby clothing donation centers
 
 2. **User Experience**
+   - UI/UX could be improved
    - Social sharing features
-   - Community challenges
    - Detailed sustainability tips
 
 3. **Technical**
@@ -139,10 +138,11 @@ Points are awarded for:
 
 ---
 
-## 🔗 Links
+##  Links
 - [Frontend Repository](https://github.com/Narennnnn/eco-scan-challenge)
 - [Backend Repository](https://github.com/Narennnnn/eco-scan-challenge-backend)
 
 ---
 
-### Thank you for contributing to a sustainable future! 🌍💚
+### Go Green, Save the Planet! 🌍💚
+
