@@ -3,7 +3,7 @@
 ## Overview
 EcoScan is a mobile app designed to help users understand the environmental impact of their clothing. By uploading images of clothing items, users can see estimated carbon scores, earn eco-reward points, and redeem sustainability-focused offers. The app uses Azure Vision API to analyze clothing items and calculate their environmental impact.
 
-## 🔧 Tech Stack
+## Tech Stack
 ### Frontend
 - React Native with Expo
 - TypeScript
